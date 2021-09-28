@@ -10,14 +10,15 @@ jobs:
     runs-on: ubuntu-latest
     env:
       AWS_REGION: us-west-2
-      
+      VERSION_GRAALVM: 21.2.0
+
     steps:
       - uses: actions/checkout@v2
       - uses: nelonoel/branch-name@v1.0.1
 
       - uses: DeLaGuardo/setup-graalvm@4.0
         with:
-          graalvm: '21.0.0.2'
+          graalvm: ${{env.VERSION_GRAALVM}}
           java: 'java11'
           arch: 'amd64'
       - run: java -version
