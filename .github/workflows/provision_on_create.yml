@@ -1,13 +1,14 @@
 name: deploy_on_branch
 
 on:
-  push:
+  create:
     branches:
       - 'waqa/**'
 
 jobs:
   build:
     runs-on: ubuntu-latest
+
     env:
       AWS_REGION: us-west-2
       VERSION_GRAALVM: 21.2.0
