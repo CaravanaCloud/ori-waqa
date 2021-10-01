@@ -55,6 +55,9 @@ jobs:
         run: echo AWS_SECRET_ACCESS_KEY=$(jq -r ".SecretAccessKey" ak.json) >> $GITHUB_ENV
 
       - name: Check new identity
+        run: sleep 5
+
+      - name: Check new identity
         run: aws sts get-caller-identity
 
       - name: Provision ROSA Cluster
