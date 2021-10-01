@@ -14,7 +14,14 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
+      
       - uses: nelonoel/branch-name@v1.0.1
+
+      - name: generate Unique id
+        run: echo UNIQ_ID=${BRANCH_NAME/\//-} >> $GITHUB_ENV
+
+      - name: check unique id
+        run: echo ${{ env.UNIQ_ID }}
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
@@ -28,4 +35,6 @@ jobs:
 
       - name: Provision ROSA Cluster
         run: echo provisioning rosa cluster
+      
+      
 
