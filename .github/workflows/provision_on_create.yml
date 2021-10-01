@@ -1,4 +1,4 @@
-name: deploy_on_branch
+name: provision_on_create
 
 on:
   create:
