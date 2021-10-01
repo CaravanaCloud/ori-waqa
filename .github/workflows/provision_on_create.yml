@@ -49,16 +49,16 @@ jobs:
         run: aws iam create-access-key --user-name ${{ env.UNIQ_ID }} --query "AccessKey" > ak.json
       
       - name: Export AK_ID
-        run: echo USER_ACCESS_KEY_ID=$(jq ".AccessKeyId" ak.json) >> $GITHUB_ENV
+        run: echo USER_ACCESS_KEY_ID="$(jq ".AccessKeyId" ak.json)" >> $GITHUB_ENV
 
       - name: Export AK_ID
-        run: echo USER_SECRET_ACCESS_KEY=$(jq ".SecretAccessKey" ak.json) >> $GITHUB_ENV
+        run: echo USER_SECRET_ACCESS_KEY="::add-mask::$(jq ".SecretAccessKey" ak.json)" >> $GITHUB_ENV
 
       - name: Assume new AWS identity
         uses: aws-actions/configure-aws-credentials@v1
         with:
-          aws-access-key-id: ${{ secrets.USER_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.USER_SECRET_ACCESS_KEY }}
+          aws-access-key-id: ${{ env.USER_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ env.USER_SECRET_ACCESS_KEY }}
           aws-region: ${{ env.AWS_REGION }}      
 
       - name: Check new identity
