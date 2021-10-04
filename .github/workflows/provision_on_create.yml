@@ -54,15 +54,15 @@ jobs:
       - name: Export SK_ID
         run: echo NEW_SECRET_ACCESS_KEY=$(jq -r ".SecretAccessKey" ak.json) >> $GITHUB_ENV
 
+      - name: Wait
+        run: sleep 10
+
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
           aws-access-key-id: ${{ env.NEW_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ env.NEW_SECRET_ACCESS_KEY }}
           aws-region: ${{ env.AWS_REGION }}
-
-      - name: Wait
-        run: sleep 5
 
       - name: Check new identity
         run: aws sts get-caller-identity
