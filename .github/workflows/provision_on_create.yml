@@ -27,8 +27,8 @@ jobs:
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
-          aws-access-key-id: ${{ secrets.CC_AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.CC_AWS_SECRET_ACCESS_KEY }}
+          aws-access-key-id: ${{ secrets.OCP_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.OCP_SECRET_ACCESS_KEY }}
           aws-region: ${{ env.AWS_REGION }}
 
       - name: Check AWS authentication
@@ -49,12 +49,19 @@ jobs:
         run: aws iam create-access-key --user-name ${{ env.UNIQ_ID }} --query "AccessKey" > ak.json
       
       - name: Export AK_ID
-        run: echo AWS_ACCESS_KEY_ID="$(jq -r ".AccessKeyId" ak.json)" >> $GITHUB_ENV
+        run: echo NEW_ACCESS_KEY_ID="$(jq -r ".AccessKeyId" ak.json)" >> $GITHUB_ENV
 
       - name: Export SK_ID
-        run: echo AWS_SECRET_ACCESS_KEY=$(jq -r ".SecretAccessKey" ak.json) >> $GITHUB_ENV
+        run: echo NEW_SECRET_ACCESS_KEY=$(jq -r ".SecretAccessKey" ak.json) >> $GITHUB_ENV
 
-      - name: Check new identity
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ env.NEW_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ env.NEW_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Wait
         run: sleep 5
 
       - name: Check new identity
