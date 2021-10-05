@@ -45,7 +45,7 @@ jobs:
         run: aws sts get-caller-identity
 
       - name: Login to ROSA
-        run: rosa login --token=${{ env.ROSA_TOKEN }}
+        run: rosa login --token=${{ secrets.ROSA_TOKEN }}
 
       - name: Verify ROSA permissions
         run: rosa verify permissions
