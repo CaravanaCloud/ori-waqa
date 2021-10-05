@@ -26,10 +26,10 @@ jobs:
 
       - name: Download rosa binary
         run: |
-          wget -O /tmp/rosa-linux.tar.gz https://mirror.openshift.com/pub/openshift-v4/x86_64/clients/rosa/latest/rosa-linux.tar.gz
+          wget -q -O /tmp/rosa-linux.tar.gz https://mirror.openshift.com/pub/openshift-v4/x86_64/clients/rosa/latest/rosa-linux.tar.gz
           tar zxvf /tmp/rosa-linux.tar.gz -C  /tmp/
-          sudo mv /tmp/splat/rosa /usr/local/bin/ 
-          rm /tmp/splat/rosa-linux.tar.gz
+          sudo mv /tmp/rosa /usr/local/bin/ 
+          rm /tmp/rosa-linux.tar.gz
 
       - name: Check rosa binary
         run: rosa version
