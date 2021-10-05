@@ -67,15 +67,15 @@ jobs:
       
       - name: Wait until cluster is ready
         run: |
-          CLUSTER_STATE="installing"
-          until [ $CLUSTER_STATE != "installing" ] && [ $CLUSTER_STATE != "pending" ] 
+          CLUSTER_STATE="unknown"
+          until [ $CLUSTER_STATE == "ready" ]
           do
               CLUSTER_STATE=$(rosa describe cluster -c ${{ env.UNIQ_ID }} -o json | jq -r ".status.state")
               echo Cluster is $CLUSTER_STATE on $(date)
               sleep 30
           done
 
-      - name: Nest step
+      - name: Next
         run: echo next step
 
 
