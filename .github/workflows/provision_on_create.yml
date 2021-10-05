@@ -66,4 +66,16 @@ jobs:
         run: rosa create cluster --cluster-name=${{ env.UNIQ_ID }}
       
       - name: Wait until cluster is ready
-        run: rosa describe cluster -c ${{ env.UNIQ_ID }}
+        run: |
+          CLUSTER_STATE="unknown"
+          until [ $CLUSTER_STATE != "installing" ]
+          do
+              CLUSTER_STATE=$(rosa describe cluster -c ${{ env.UNIQ_ID }} -o json | jq -r ".status.state")
+              echo Cluster is $CLUSTER_STATE on $(date)
+              sleep 30
+          done
+
+      - name: Nest step
+        run: echo next step
+
+
