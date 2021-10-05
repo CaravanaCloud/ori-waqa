@@ -86,6 +86,9 @@ jobs:
       - name: Check new identity
         run: aws sts get-caller-identity
 
+      - name: Login to ROSA
+        run: rosa login --token=${{ env.ROSA_TOKEN }}
+
       - name: Verify ROSA permissions
         run: rosa verify permissions
 
@@ -102,6 +105,6 @@ jobs:
         run: rosa init
 
       - name: Create ROSA cluster
-        run: echo rosa create cluster
+        run: echo rosa create cluster 
 
       
