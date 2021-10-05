@@ -63,6 +63,7 @@ jobs:
         run: rosa init
 
       - name: Create ROSA cluster
-        run: echo rosa create cluster 
-
+        run: rosa create cluster --cluster-name=${{ env.UNIQ_ID }}
       
+      - name: Wait until cluster is ready
+        run: rosa describe cluster -c ${{ env.UNIQ_ID }}
