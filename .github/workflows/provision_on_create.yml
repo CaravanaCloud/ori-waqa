@@ -67,7 +67,7 @@ jobs:
       
       - name: Wait until cluster is ready
         run: |
-          CLUSTER_STATE="unknown"
+          CLUSTER_STATE="installing"
           until [ $CLUSTER_STATE != "installing" ]
           do
               CLUSTER_STATE=$(rosa describe cluster -c ${{ env.UNIQ_ID }} -o json | jq -r ".status.state")
