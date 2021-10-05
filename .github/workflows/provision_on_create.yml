@@ -36,6 +36,9 @@ jobs:
 
       - name: Create IAM User
         run: aws iam create-user --user-name ${{ env.UNIQ_ID }}
+      
+      - name: Wait for IAM User
+        run: aws iam wait user-exists --user-name ${{ env.UNIQ_ID }}
 
       - name: Grant install privileges
         run: |
@@ -59,9 +62,6 @@ jobs:
 
       - name: Export SK_ID
         run: echo NEW_SECRET_ACCESS_KEY=$(jq -r ".SecretAccessKey" ak.json) >> $GITHUB_ENV
-
-      - name: Wait
-        run: sleep 10
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
