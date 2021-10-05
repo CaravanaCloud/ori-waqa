@@ -86,5 +86,22 @@ jobs:
       - name: Check new identity
         run: aws sts get-caller-identity
 
-      - name: Provision ROSA Cluster
-        run: echo provisioning rosa cluster
+      - name: Verify ROSA permissions
+        run: rosa verify permissions
+
+      - name: Verify OC client
+        run: rosa verify oc
+
+      - name: Verify ROSA quotas
+        run: rosa verify quota --region=${{ env.AWS_REGION }}
+      
+      - name: Verify ROSA identity
+        run: rosa whoami
+      
+      - name: Init ROSA
+        run: rosa init
+
+      - name: Create ROSA cluster
+        run: echo rosa create cluster
+
+      
