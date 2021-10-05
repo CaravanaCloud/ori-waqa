@@ -44,48 +44,6 @@ jobs:
       - name: Check AWS authentication
         run: aws sts get-caller-identity
 
-      - name: Create IAM User
-        run: aws iam create-user --user-name ${{ env.UNIQ_ID }}
-      
-      - name: Wait for IAM User
-        run: aws iam wait user-exists --user-name ${{ env.UNIQ_ID }}
-
-      - name: Grant install privileges
-        run: |
-            aws iam attach-user-policy \
-              --user-name ${{ env.UNIQ_ID }} \
-              --policy-arn ${{ env.POLICY_ARN }}
-        env:
-          POLICY_ARN: "arn:aws:iam::aws:policy/AdministratorAccess"
-
-      - name: Create install user credentials
-        run: aws iam create-access-key --user-name ${{ env.UNIQ_ID }} --query "AccessKey" > ak.json
-      
-      - name: Wait for credentials
-        run: sleep 5
-
-      - name: Mask AK_ID
-        run: echo "::add-mask::$(jq -r ".AccessKeyId" ak.json)"
-
-      - name: Mask SK_ID
-        run: echo "::add-mask::$(jq -r ".SecretAccessKey" ak.json)"
-
-      - name: Export AK_ID
-        run: echo NEW_ACCESS_KEY_ID="$(jq -r ".AccessKeyId" ak.json)" >> $GITHUB_ENV
-
-      - name: Export SK_ID
-        run: echo NEW_SECRET_ACCESS_KEY=$(jq -r ".SecretAccessKey" ak.json) >> $GITHUB_ENV
-
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-access-key-id: ${{ env.NEW_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ env.NEW_SECRET_ACCESS_KEY }}
-          aws-region: ${{ env.AWS_REGION }}
-
-      - name: Check new identity
-        run: aws sts get-caller-identity
-
       - name: Login to ROSA
         run: rosa login --token=${{ env.ROSA_TOKEN }}
 
