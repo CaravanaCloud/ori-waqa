@@ -83,11 +83,16 @@ jobs:
           LOGIN_CMD=$(cat rosa_admin_out.txt | grep https)
           echo $LOGIN_CMD
       
+      - name: Login as admin
+        run: |
+          LOGIN_CMD=$(cat rosa_admin_out.txt | grep https)
+          eval $LOGIN_CMD
+      
       #TODO: Encrypt or use IDP
       - name: Upload generated credentials
         uses: actions/upload-artifact@v2
         with:
-          name: rosa_admin_out.txt
+          name: rosa_admin_out
           path: rosa_admin_out.txt
 
       - name: Next
