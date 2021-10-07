@@ -8,6 +8,7 @@ on:
 jobs:
   provision_cluster:
     runs-on: ubuntu-latest
+    timeout-minutes: 45
 
     env:
       AWS_REGION: us-west-2
@@ -65,6 +66,7 @@ jobs:
       - name: Create ROSA cluster
         run: rosa create cluster --cluster-name=${{ env.UNIQ_ID }}
       
+      # TODO: Open a ticket to add "wait-for" on ROSA client
       - name: Wait until cluster is ready
         run: |
           CLUSTER_STATE="unknown"
@@ -74,6 +76,13 @@ jobs:
               echo Cluster is $CLUSTER_STATE on $(date)
               sleep 30
           done
+      
+      # TODO: Open a ticket to add choice of password or export generated password
+      - name: Create admin user
+        run: rosa create admin --cluster=${{ env.UNIQ_ID }} > rosa_create_admin.txt 
+
+      - name: Print created details
+        run: cat rosa_create_admin.txt
 
       - name: Next
         run: echo next step
