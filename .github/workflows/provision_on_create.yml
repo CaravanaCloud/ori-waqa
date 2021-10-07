@@ -88,6 +88,9 @@ jobs:
           LOGIN_CMD=$(cat rosa_admin_out.txt | grep https)
           eval $LOGIN_CMD
       
+      - name: Check login
+        run: oc whoami
+
       #TODO: Encrypt or use IDP
       - name: Upload generated credentials
         uses: actions/upload-artifact@v2
