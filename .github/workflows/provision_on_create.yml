@@ -74,6 +74,12 @@ jobs:
               echo Cluster is $CLUSTER_STATE on $(date)
               sleep 30
           done
+      
+      - name: Create admin
+        run: rosa create admin --cluster=${{ env.UNIQ_ID }} > rosa_admin_out.txt
+
+      - name: Print admin
+        run: cat rosa_admin_out.txt
 
       - name: Next
         run: echo next step
