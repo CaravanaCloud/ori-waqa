@@ -79,7 +79,16 @@ jobs:
         run: rosa create admin --cluster=${{ env.UNIQ_ID }} > rosa_admin_out.txt
 
       - name: Print admin
-        run: cat rosa_admin_out.txt
+        run: |
+          LOGIN_CMD=$(cat rosa_admin_out.txt | grep https)
+          echo $LOGIN_CMD
+      
+      #TODO: Encrypt or use IDP
+      - name: Upload generated credentials
+        uses: actions/upload-artifact@v2
+        with:
+          name: rosa_admin_out.txt
+          path: rosa_admin_out.txt
 
       - name: Next
         run: echo next step
