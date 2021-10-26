@@ -11,8 +11,9 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
+      ROSA_URL: https://github.com/faermanj/rosa/releases/download/rosa-20211026_112914/rosa.tar.gz
       AWS_REGION: us-west-2
-      VERSION_GRAALVM: 21.2.0
+      CLUSTER_PASSWORD: Masterkey123
 
     steps:
       - uses: actions/checkout@v2
@@ -20,7 +21,7 @@ jobs:
       - uses: nelonoel/branch-name@v1.0.1
 
       - name: generate Unique id
-        run: echo UNIQ_ID=o7-$(date +m%d%H%M) >> $GITHUB_ENV
+        run: echo UNIQ_ID=o7-$(date +%m%d%H%M) >> $GITHUB_ENV
 
       - name: check unique id
         run: echo ${{ env.UNIQ_ID }}
@@ -31,9 +32,7 @@ jobs:
           tar zxvf /tmp/rosa-linux.tar.gz -C  /tmp/
           sudo mv /tmp/rosa /usr/local/bin/ 
           rm /tmp/rosa-linux.tar.gz
-        env:
-          ROSA_URL: https://github.com/faermanj/rosa/releases/download/rosa-20211026_112914/rosa.tar.gz
-
+        
       - name: Check rosa binary
         run: rosa version
 
@@ -71,21 +70,15 @@ jobs:
       - name: Wait until cluster is ready
         run: rosa wait-for install --cluster=${{ env.UNIQ_ID }}
 
-      #- name: Wait until cluster is ready
-      #  run: |
-      #    CLUSTER_STATE="unknown"
-      #    until [ $CLUSTER_STATE == "ready" ]
-      #    do
-      #        CLUSTER_STATE=$(rosa describe cluster -c ${{ env.UNIQ_ID }} -o json | jq -r ".status.state")
-      #        echo Cluster is $CLUSTER_STATE on $(date)
-      #        sleep 30
-      #    done
-      
-      - name: Create admin
-        run: rosa create admin --c ${{ env.UNIQ_ID }} -p ${{ env.PASSWORD }} | tee rosa_admin_out.txt
-        env:
-          PASSWORD: Masterkey123
+      - name: Mask admin password
+        run: echo "::add-mask::${{ env.CLUSTER_PASSWORD }}" 
 
+      - name: Test password masking
+        run: echo ${{ env.CLUSTER_PASSWORD }} 
+
+      - name: Create admin
+        run: rosa create admin -c ${{ env.UNIQ_ID }} -p ${{ env.CLUSTER_PASSWORD }} | tee rosa_admin_out.txt
+          
       - name: Print admin
         run: |
           LOGIN_CMD=$(cat rosa_admin_out.txt | grep https)
