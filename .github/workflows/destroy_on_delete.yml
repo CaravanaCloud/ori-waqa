@@ -1,0 +1,32 @@
+name: destroy_on_delete
+
+on:
+  delete
+
+jobs:
+  provision_cluster:
+    runs-on: ubuntu-latest
+
+    env:
+      AWS_REGION: us-west-2
+      VERSION_GRAALVM: 21.2.0
+
+    steps:
+      - uses: actions/checkout@v2
+      
+      - uses: nelonoel/branch-name@v1.0.1
+
+      - name: generate Unique id
+        run: echo UNIQ_ID=${BRANCH_NAME/\//-} >> $GITHUB_ENV
+        env:
+          BRANCH_NAME: ${{ github.event.ref }}
+
+      - name: check unique id
+        run: echo ${BRANCH_NAME} 
+        env:
+          BRANCH_NAME: ${{ github.event.ref }}
+
+      - name: check unique id
+        run: echo ${{ env.UNIQ_ID }}
+
+
