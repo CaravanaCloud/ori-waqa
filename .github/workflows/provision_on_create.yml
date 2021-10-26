@@ -69,7 +69,7 @@ jobs:
         run: rosa create cluster --cluster-name=${{ env.UNIQ_ID }}
       
       - name: Wait until cluster is ready
-        run: rosa wait-for install --cluster-name=${{ env.UNIQ_ID }}
+        run: rosa wait-for install --cluster=${{ env.UNIQ_ID }}
 
       #- name: Wait until cluster is ready
       #  run: |
