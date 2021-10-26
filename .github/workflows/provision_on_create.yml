@@ -70,14 +70,8 @@ jobs:
       - name: Wait until cluster is ready
         run: rosa wait-for install --cluster=${{ env.UNIQ_ID }}
 
-      - name: Mask admin password
-        run: echo "::add-mask::${{ env.CLUSTER_PASSWORD }}" 
-
-      - name: Test password masking
-        run: echo ${{ env.CLUSTER_PASSWORD }} 
-
       - name: Create admin
-        run: rosa create admin -c ${{ env.UNIQ_ID }} -p ${{ env.CLUSTER_PASSWORD }} | tee rosa_admin_out.txt
+        run: rosa create admin -c ${{ env.UNIQ_ID }} -p ${{ secrets.CLUSTER_PASSWORD }} | tee rosa_admin_out.txt
           
       - name: Print admin
         run: |
