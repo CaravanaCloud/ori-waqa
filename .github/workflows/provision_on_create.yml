@@ -69,17 +69,22 @@ jobs:
         run: rosa create cluster --cluster-name=${{ env.UNIQ_ID }}
       
       - name: Wait until cluster is ready
-        run: |
-          CLUSTER_STATE="unknown"
-          until [ $CLUSTER_STATE == "ready" ]
-          do
-              CLUSTER_STATE=$(rosa describe cluster -c ${{ env.UNIQ_ID }} -o json | jq -r ".status.state")
-              echo Cluster is $CLUSTER_STATE on $(date)
-              sleep 30
-          done
+        run: rosa wait-for install --cluster-name=${{ env.UNIQ_ID }}
+
+      #- name: Wait until cluster is ready
+      #  run: |
+      #    CLUSTER_STATE="unknown"
+      #    until [ $CLUSTER_STATE == "ready" ]
+      #    do
+      #        CLUSTER_STATE=$(rosa describe cluster -c ${{ env.UNIQ_ID }} -o json | jq -r ".status.state")
+      #        echo Cluster is $CLUSTER_STATE on $(date)
+      #        sleep 30
+      #    done
       
       - name: Create admin
-        run: rosa create admin --cluster=${{ env.UNIQ_ID }} > rosa_admin_out.txt
+        run: rosa create admin --cluster=${{ env.UNIQ_ID }} --password=${{ env.PASSWORD }} > rosa_admin_out.txt
+        env:
+          PASSWORD: Masterkey123
 
       - name: Print admin
         run: |
