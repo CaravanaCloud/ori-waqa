@@ -82,7 +82,7 @@ jobs:
       #    done
       
       - name: Create admin
-        run: rosa create admin --cluster=${{ env.UNIQ_ID }} --password=${{ env.PASSWORD }} > rosa_admin_out.txt
+        run: rosa create admin --c ${{ env.UNIQ_ID }} -p ${{ env.PASSWORD }} | tee rosa_admin_out.txt
         env:
           PASSWORD: Masterkey123
 
