@@ -20,7 +20,7 @@ jobs:
       - uses: nelonoel/branch-name@v1.0.1
 
       - name: generate Unique id
-        run: echo UNIQ_ID=o7-$(date +%Y%m%d-%H%M) >> $GITHUB_ENV
+        run: echo UNIQ_ID=o7-$(date +m%d%H%M) >> $GITHUB_ENV
 
       - name: check unique id
         run: echo ${{ env.UNIQ_ID }}
