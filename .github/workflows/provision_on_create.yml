@@ -4,6 +4,7 @@ on:
   create:
     branches:
       - 'waqa/**'
+  workflow_dispatch: {}
 
 jobs:
   provision_cluster:
@@ -26,10 +27,12 @@ jobs:
 
       - name: Download rosa binary
         run: |
-          wget -q -O /tmp/rosa-linux.tar.gz https://mirror.openshift.com/pub/openshift-v4/x86_64/clients/rosa/latest/rosa-linux.tar.gz
+          wget -q -O /tmp/rosa-linux.tar.gz ${{ env.ROSA_URL }}
           tar zxvf /tmp/rosa-linux.tar.gz -C  /tmp/
           sudo mv /tmp/rosa /usr/local/bin/ 
           rm /tmp/rosa-linux.tar.gz
+        env:
+          ROSA_URL: https://github.com/faermanj/rosa/releases/download/rosa-0.0.3/rosa-0.0.3.tar.gz
 
       - name: Check rosa binary
         run: rosa version
