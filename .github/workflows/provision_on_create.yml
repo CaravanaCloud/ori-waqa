@@ -32,7 +32,7 @@ jobs:
           sudo mv /tmp/rosa /usr/local/bin/ 
           rm /tmp/rosa-linux.tar.gz
         env:
-          ROSA_URL: https://github.com/faermanj/rosa/releases/download/rosa-0.0.3/rosa-0.0.3.tar.gz
+          ROSA_URL: https://github.com/faermanj/rosa/releases/download/rosa-0.0.4/rosa-0.0.4.tar.gz
 
       - name: Check rosa binary
         run: rosa version
