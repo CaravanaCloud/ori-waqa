@@ -65,10 +65,13 @@ jobs:
         run: rosa init
 
       - name: Create ROSA cluster
-        run: rosa create cluster --cluster-name=${{ env.UNIQ_ID }}
+        run: rosa create cluster -c ${{ env.UNIQ_ID }}
       
       - name: Wait until cluster is ready
-        run: rosa wait-for install --cluster=${{ env.UNIQ_ID }}
+        run: rosa wait-for install -c ${{ env.UNIQ_ID }}
+
+      - name: Describe cluster
+        run: rosa describe cluster -c ${{ env.UNIQ_ID }}
 
       - name: Create admin
         run: rosa create admin -c ${{ env.UNIQ_ID }} -p ${{ secrets.CLUSTER_PASSWORD }} | tee rosa_admin_out.txt
@@ -85,13 +88,6 @@ jobs:
       
       - name: Check login
         run: oc whoami
-
-      #TODO: Encrypt or use IDP
-      - name: Upload generated credentials
-        uses: actions/upload-artifact@v2
-        with:
-          name: rosa_admin_out
-          path: rosa_admin_out.txt
 
       - name: Next
         run: echo next step
