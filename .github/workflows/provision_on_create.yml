@@ -13,7 +13,6 @@ jobs:
     env:
       ROSA_URL: https://github.com/faermanj/rosa/releases/download/rosa-20211027_111456/rosa.tar.gz
       AWS_REGION: us-west-2
-      CLUSTER_PASSWORD: Masterkey123
 
     steps:
       - uses: actions/checkout@v2
