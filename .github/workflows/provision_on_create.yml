@@ -80,15 +80,10 @@ jobs:
           echo CLUSTER_API=$CLUSTER_API >> $GITHUB_ENV
 
       - name: Create admin
-        run: rosa create admin -c ${{ env.UNIQ_ID }} -p ${{ secrets.CLUSTER_PASSWORD }} | tee rosa_admin_out.txt
-          
-      - name: Print admin
-        run: |
-          LOGIN_CMD=$(cat rosa_admin_out.txt | grep https)
-          echo $LOGIN_CMD
+        run: rosa create admin -c ${{ env.UNIQ_ID }} -p ${{ secrets.CLUSTER_PASSWORD }} 
       
       - name: Login as admin
-        run: oc login ${{ env.CLUSTER_API }} --insecure-skip-tls-verify --username admin --password ${{ secrets.CLUSTER_PASSWORD }}
+        run: oc login ${{ env.CLUSTER_API }} --insecure-skip-tls-verify --username cluster-admin --password ${{ secrets.CLUSTER_PASSWORD }}
       
       - name: Check login
         run: oc whoami
