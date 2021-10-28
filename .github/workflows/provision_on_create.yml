@@ -70,7 +70,14 @@ jobs:
         run: rosa wait-for install -c ${{ env.UNIQ_ID }}
 
       - name: Describe cluster
-        run: rosa describe cluster -c ${{ env.UNIQ_ID }}
+        run: rosa describe cluster -c ${{ env.UNIQ_ID }} -o json
+
+      # TODO login by cluster name
+      - name: Get cluster API
+        run: |
+          CLUSTER_API=$(rosa describe cluster -c ${{ env.UNIQ_ID }} -o json | jq -r ".api.url")
+          echo CLUSTER_API=$CLUSTER_API
+          echo CLUSTER_API=$CLUSTER_API >> $GITHUB_ENV
 
       - name: Create admin
         run: rosa create admin -c ${{ env.UNIQ_ID }} -p ${{ secrets.CLUSTER_PASSWORD }} | tee rosa_admin_out.txt
@@ -81,14 +88,10 @@ jobs:
           echo $LOGIN_CMD
       
       - name: Login as admin
-        run: |
-          LOGIN_CMD=$(cat rosa_admin_out.txt | grep https)
-          eval $LOGIN_CMD
+        run: oc login ${{ env.CLUSTER_API }} --insecure-skip-tls-verify --username admin --password ${{ secrets.CLUSTER_PASSWORD }}
       
       - name: Check login
         run: oc whoami
 
       - name: Next
         run: echo next step
-
-
