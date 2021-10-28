@@ -72,8 +72,11 @@ jobs:
       - name: Describe cluster
         run: rosa describe cluster -c ${{ env.UNIQ_ID }} -o json
 
-      # TODO login by cluster name
-      - name: Get cluster API
+      # TODO login by cluster name (without needing api url)
+      # TODO fetch most important data (urls) without JQ
+      - name: Login to ROSA
+        run: rosa login --token=${{ secrets.ROSA_TOKEN }} --cluster={{ env.UNIQ_ID }}       
+      - name: Get cluster API address
         run: |
           CLUSTER_API=$(rosa describe cluster -c ${{ env.UNIQ_ID }} -o json | jq -r ".api.url")
           echo CLUSTER_API=$CLUSTER_API
@@ -81,10 +84,19 @@ jobs:
 
       - name: Create admin
         run: rosa create admin -c ${{ env.UNIQ_ID }} -p ${{ secrets.CLUSTER_PASSWORD }} 
-      
-      - name: Login as admin
+
+      # TODO Cut a ticket for this waiter
+      - name: Wait for admin to become active
         run: oc login ${{ env.CLUSTER_API }} --insecure-skip-tls-verify --username cluster-admin --password ${{ secrets.CLUSTER_PASSWORD }}
       
+
+      - name: Login as admin
+        run: sleep 300
+      
+#      - name: Setup GitHub IdP
+#        run: |
+#            rosa create idp --type=github --name=cc-gh-idp -c ${{ env.UNIQ_ID }}  --organizations CaravanaCloud  
+
       - name: Check login
         run: oc whoami
 
