@@ -75,7 +75,7 @@ jobs:
       # TODO login by cluster name (without needing api url)
       # TODO fetch most important data (urls) without JQ
       - name: Login to ROSA
-        run: rosa login --token=${{ secrets.ROSA_TOKEN }} --cluster={{ env.UNIQ_ID }}       
+        run: rosa login --token=${{ secrets.ROSA_TOKEN }} 
       - name: Get cluster API address
         run: |
           CLUSTER_API=$(rosa describe cluster -c ${{ env.UNIQ_ID }} -o json | jq -r ".api.url")
